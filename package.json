@@ -6,8 +6,11 @@
   "dependencies": {
     "koa": "^2.11.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "esm": "^3.2.25"
+  },
   "scripts": {
+    "start": "node -r esm ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
