@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "koa": "^2.11.0"
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8"
   },
   "devDependencies": {
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "nodemon": "^2.0.2"
   },
   "scripts": {
-    "start": "node -r esm ./index.js",
+    "start": "nodemon --exec 'node -r esm ./index.js'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
