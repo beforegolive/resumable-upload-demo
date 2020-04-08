@@ -1,13 +1,11 @@
 import Koa from 'koa'
 import Router from 'koa-router'
-import koaBody from 'koa-bodyparser'
-import formidable from 'koa2-formidable'
+import formidableMiddleware from'./formidable-middleware'
 
 const app = new Koa()
 const router = new Router()
 
-app.use(koaBody())
-app.use(formidable({ uploadDir:'./upload/'}))
+app.use(formidableMiddleware({ uploadDir:'./upload/' }))
 
 app.use(async (ctx, next) => {
 	await next()
