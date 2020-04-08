@@ -34,7 +34,6 @@ router.get('/error', async ctx=>{
 
 router.post('/post-test', async ctx=>{
   console.log(ctx.query);
-  console.log(ctx.params);
   console.log(ctx.request.body);
   console.log(ctx.request.files);
   ctx.body=`post test success! ${JSON.stringify(ctx.request.body)}`
