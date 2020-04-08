@@ -7,6 +7,11 @@ const koaMiddleware = opt=>{
       form[key]=opt[key]
     }
 
+    form.on('fileBegin',(filename, file)=>{
+      const randomStr = Math.random().toString(16).substr(2)
+      file.path=`${form.uploadDir}${randomStr}-${file.name}`
+    })
+
     await new Promise((resolve, reject)=>{
       form.parse(ctx.req, (err, fields, files)=>{
         if(err){
