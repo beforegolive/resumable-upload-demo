@@ -1,6 +1,6 @@
 import Koa from 'koa'
 import Router from 'koa-router'
-import formidableMiddleware from'./formidable-middleware'
+import formidableMiddleware from './formidable-middleware'
 
 const app = new Koa()
 const router = new Router()
