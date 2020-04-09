@@ -15,10 +15,10 @@
   },
   "devDependencies": {
     "esm": "^3.2.25",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.3"
   },
   "scripts": {
-    "start": "nodemon --exec 'node -r esm ./index.js'",
+    "start": "nodemon --exec 'node -r esm ./server/index.js'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -5,7 +5,10 @@ import formidableMiddleware from './formidable-middleware'
 const app = new Koa()
 const router = new Router()
 
-app.use(formidableMiddleware({ uploadDir:'./upload/' }))
+app.use(formidableMiddleware({ 
+  uploadDir:'./upload/',
+  hash: true
+}))
 
 app.use(async (ctx, next) => {
 	await next()
@@ -33,6 +36,7 @@ router.get('/error', async ctx=>{
 })
 
 router.post('/post-test', async ctx=>{
+  console.warn('=== /post-test log :');
   console.log(ctx.query);
   console.log(ctx.request.body);
   console.log(ctx.request.files);
