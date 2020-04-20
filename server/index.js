@@ -1,14 +1,22 @@
 import Koa from 'koa'
 import Router from 'koa-router'
+import fs from 'fs'
 import formidableMiddleware from './formidable-middleware'
 
 const app = new Koa()
 const router = new Router()
+const uploadDir = './upload/'
 
-app.use(formidableMiddleware({ 
-  uploadDir:'./upload/',
-  hash: true
-}))
+if (!fs.existsSync(uploadDir)) {
+	fs.mkdirSync(uploadDir)
+}
+
+app.use(
+	formidableMiddleware({
+		uploadDir: './upload/',
+		hash: true
+	})
+)
 
 app.use(async (ctx, next) => {
 	await next()
@@ -23,28 +31,27 @@ app.use(async (ctx, next) => {
 	ctx.set('X-Response-Time', `${ms}ms`)
 })
 
-app.on('error', err=>{
-  console.log('server error:', err)
+app.on('error', err => {
+	console.log('server error:', err)
 })
 
-router.get('/', ctx=>{
-  ctx.body = 'Hello World'
+router.get('/', ctx => {
+	ctx.body = 'Hello World'
 })
 
-router.get('/error', async ctx=>{
-  ctx.throw(500, 'custome error', { name: 'jacky'})
+router.get('/error', async ctx => {
+	ctx.throw(500, 'custome error', { name: 'jacky' })
 })
 
-router.post('/post-test', async ctx=>{
-  console.warn('=== /post-test log :');
-  console.log(ctx.query);
-  console.log(ctx.request.body);
-  console.log(ctx.request.files);
-  ctx.body=`post test success! ${JSON.stringify(ctx.request.body)}`
+router.post('/post-test', async ctx => {
+	console.warn('=== /post-test log :')
+	console.log(ctx.query)
+	console.log(ctx.request.body)
+	console.log(ctx.request.files)
+	ctx.body = `post test success! ${JSON.stringify(ctx.request.body)}`
 })
 
 app.use(router.routes())
 
-
 app.listen(3000)
-console.log('started, please visit http://localhost:3000.');
+console.log('started, please visit http://localhost:3000.')
