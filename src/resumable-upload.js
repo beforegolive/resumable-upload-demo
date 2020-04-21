@@ -1,5 +1,5 @@
 import React from 'react'
-
+import md5 from 'js-md5'
 class ResumableUpload extends React.Component {
 	uploadFile = () => {
 		// console.warn(this._file.files)
@@ -27,6 +27,7 @@ class ResumableUpload extends React.Component {
 		reader.onloadend = e => {
 			console.warn('== onloadend')
 			console.warn('=== reader:', reader)
+			console.warn('=== result md5: ', md5(reader.result))
 			form.append('file', new File([reader.result], uploadedFile.name, { type: 'text/plain' }))
 			fetch('http://localhost:3000/post-test', {
 				method: 'POST',
@@ -34,13 +35,9 @@ class ResumableUpload extends React.Component {
 					Accept: 'application/json'
 				},
 				body: form
+			}).then(res => {
+				return res.blob()
 			})
-				.then(res => {
-					return res.blob()
-				})
-				.then(response => {
-					console.warn('response:', response)
-				})
 		}
 
 		reader.onloadstart = e => {

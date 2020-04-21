@@ -6,6 +6,7 @@
   "dependencies": {
     "@koa/cors": "^2.2.3",
     "@koa/multer": "^2.0.2",
+    "js-md5": "^0.7.3",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-bodyparser": "^4.3.0",
