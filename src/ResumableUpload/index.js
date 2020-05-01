@@ -19,10 +19,6 @@ function ResumableUpload() {
 		let form = new FormData()
 		var reader = new FileReader()
 
-		reader.onload = e => {
-			console.warn('== onload')
-		}
-
 		reader.onloadend = async e => {
 			const fileMd5 = md5(reader.result)
 			const ext = uploadedFile.name.substr(uploadedFile.name.lastIndexOf('.') + 1)
@@ -33,13 +29,12 @@ function ResumableUpload() {
 				`http://localhost:3000/get-tmp-file-size?name=${finalFileName}`
 			).then(res => res.json())
 
-			console.warn('=== uploadedFile:', uploadedFile)
 			const previouProgress = Math.floor(
 				previousUploadedFileSize.size / uploadedFile.size * 100
 			)
 			setProgress(previouProgress)
 
-			// 看情况选择是否将文件切片
+			// 根据上次上传的文件大小来进行切片续传
 			const partFile =
 				previousUploadedFileSize.size === 0
 					? reader.result
