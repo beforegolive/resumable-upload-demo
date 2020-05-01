@@ -8,14 +8,12 @@ class ResumableUpload extends React.Component {
 
 	componentDidMount() {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
-			// Great success! All the File APIs are supported.
 		} else {
 			alert('The File APIs are not fully supported in this browser.')
 		}
 	}
 
 	changeHandler = e => {
-		console.warn('=== e:', e.target.files)
 		const uploadedFile = e.target.files[0]
 		let form = new FormData()
 		var reader = new FileReader()
@@ -24,22 +22,31 @@ class ResumableUpload extends React.Component {
 			console.warn('== onload')
 		}
 
-		reader.onloadend = e => {
-			console.warn('== onloadend')
-			console.warn('=== reader:', reader)
+		reader.onloadend = async e => {
 			console.warn('=== result md5: ', md5(reader.result))
 			const fileMd5 = md5(reader.result)
 			const ext = uploadedFile.name.substr(uploadedFile.name.lastIndexOf('.') + 1)
 			const finalFileName = `${fileMd5}.${ext}`
-			form.append('file', new File([reader.result], finalFileName, { type: 'text/plain' }))
+
+			// 获取上一次上传但未完成的的文件大小
+			const previousUploadedFileSize = await fetch(
+				`http://localhost:3000/get-tmp-file-size?name=${finalFileName}`
+			).then(res => res.json())
+
+			// 看情况选择是否将文件切片
+			const partFile =
+				previousUploadedFileSize.size === 0
+					? reader.result
+					: reader.result.slice(previousUploadedFileSize.size)
+
+			form.append('file', new File([partFile], finalFileName, { type: 'text/plain' }))
+
 			fetch('http://localhost:3000/post-test', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json'
 				},
 				body: form
-			}).then(res => {
-				return res.blob()
 			})
 		}
 

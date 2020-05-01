@@ -32,36 +32,28 @@ const koaMiddleware = opt => {
 		})
 
 		form.onPart = part => {
+			const tempFilePath = `${tempFileDir}${part.filename}`
+			const writer = fs.createWriteStream(tempFilePath, { flags: 'a' })
+			form.on('aborted', e => {
+				console.warn('*** aborted e:', e)
+				writer.end()
+			})
+
+			form.on('end', () => {
+				console.warn('*** event end :')
+				writer.end()
+			})
+
 			part.on('data', buffer => {
 				console.warn('=== onPart part:', part)
-				console.warn('=== onPart data:', buffer)
-				const tempFilePath = `${tempFileDir}${part.filename}`
-
-				fs.appendFile(tempFilePath, buffer, err => {
-					if (err) throw err
-				})
+				writer.write(buffer)
 			})
 		}
 
-		form.on('error', err => {
-			console.warn('*** error:', err)
-		})
-
-		form.on('aborted', e => {
-			console.warn('*** aborted e:', e)
-		})
-
-		form.on('end', () => {
-			console.warn('*** event end :')
-		})
-
 		form.on('progress', (bytesReceived, bytesExpected) => {
-			console.warn('%%% event progress')
 			console.warn('%% bytesReceived:', bytesReceived)
 			console.warn('%% bytesExpected:', bytesExpected)
 		})
-
-		form.on('data', ({ name, key, value, buffer, start, end }) => {})
 
 		await new Promise((resolve, reject) => {
 			form.parse(ctx.req, (err, fields, files) => {
