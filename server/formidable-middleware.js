@@ -1,6 +1,12 @@
 import formidable from 'formidable'
+import fs from 'fs'
 
 const koaMiddleware = opt => {
+	const tempFileDir = `./upload/tmp/`
+	if (!fs.existsSync(tempFileDir, { recursive: true })) {
+		fs.mkdirSync(tempFileDir)
+	}
+
 	return async function(ctx, next) {
 		const form = formidable.IncomingForm()
 		for (const key in opt) {
@@ -29,6 +35,11 @@ const koaMiddleware = opt => {
 			part.on('data', buffer => {
 				console.warn('=== onPart part:', part)
 				console.warn('=== onPart data:', buffer)
+				const tempFilePath = `${tempFileDir}${part.filename}`
+
+				fs.appendFile(tempFilePath, buffer, err => {
+					if (err) throw err
+				})
 			})
 		}
 

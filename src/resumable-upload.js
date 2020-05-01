@@ -28,7 +28,10 @@ class ResumableUpload extends React.Component {
 			console.warn('== onloadend')
 			console.warn('=== reader:', reader)
 			console.warn('=== result md5: ', md5(reader.result))
-			form.append('file', new File([reader.result], uploadedFile.name, { type: 'text/plain' }))
+			const fileMd5 = md5(reader.result)
+			const ext = uploadedFile.name.substr(uploadedFile.name.lastIndexOf('.') + 1)
+			const finalFileName = `${fileMd5}.${ext}`
+			form.append('file', new File([reader.result], finalFileName, { type: 'text/plain' }))
 			fetch('http://localhost:3000/post-test', {
 				method: 'POST',
 				headers: {
@@ -57,7 +60,7 @@ class ResumableUpload extends React.Component {
 	render() {
 		return (
 			<div>
-				Resumable Upload Component
+				<h4>Resumable Upload Component</h4>
 				<input ref={file => (this._file = file)} type="file" onChange={this.changeHandler} />
 				{/* <button onClick={this.uploadFile}>上传文件</button> */}
 			</div>
