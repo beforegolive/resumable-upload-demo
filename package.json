@@ -6,6 +6,7 @@
   "dependencies": {
     "@koa/cors": "^2.2.3",
     "@koa/multer": "^2.0.2",
+    "axios": "^0.19.2",
     "js-md5": "^0.7.3",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
@@ -23,9 +24,11 @@
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.5.3",
     "esm": "^3.2.25",
     "html-webpack-plugin": "^4.0.4",
     "nodemon": "^2.0.3",
+    "style-loader": "^1.2.1",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"

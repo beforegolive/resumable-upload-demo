@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import md5 from 'js-md5'
 import axios from 'axios'
-class ResumableUpload extends React.Component {
-	uploadFile = () => {
-		// console.warn(this._file.files)
-		// fetch()
-	}
 
-	componentDidMount() {
+import './index.css'
+
+function ResumableUpload() {
+	const [progress, setProgress] = useState(0)
+
+	useEffect(() => {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 		} else {
 			alert('The File APIs are not fully supported in this browser.')
 		}
-	}
+	})
 
-	changeHandler = e => {
+	const changeHandler = e => {
 		const uploadedFile = e.target.files[0]
 		let form = new FormData()
 		var reader = new FileReader()
@@ -24,7 +24,6 @@ class ResumableUpload extends React.Component {
 		}
 
 		reader.onloadend = async e => {
-			console.warn('=== result md5: ', md5(reader.result))
 			const fileMd5 = md5(reader.result)
 			const ext = uploadedFile.name.substr(uploadedFile.name.lastIndexOf('.') + 1)
 			const finalFileName = `${fileMd5}.${ext}`
@@ -33,6 +32,12 @@ class ResumableUpload extends React.Component {
 			const previousUploadedFileSize = await fetch(
 				`http://localhost:3000/get-tmp-file-size?name=${finalFileName}`
 			).then(res => res.json())
+
+			console.warn('=== uploadedFile:', uploadedFile)
+			const previouProgress = Math.floor(
+				previousUploadedFileSize.size / uploadedFile.size * 100
+			)
+			setProgress(previouProgress)
 
 			// 看情况选择是否将文件切片
 			const partFile =
@@ -44,46 +49,30 @@ class ResumableUpload extends React.Component {
 
 			axios.post('http://localhost:3000/post-test', form, {
 				onUploadProgress: progressEvent => {
-					console.warn('progressEvent:', progressEvent)
+					// 用当前上传部分加上上次上传的部分来正确显示进度条位置
+					const uploadedPart = progressEvent.loaded + previousUploadedFileSize.size
+					const wholeFileSize = uploadedFile.size
+					const currProgress = Math.floor(uploadedPart / wholeFileSize * 100)
+					setProgress(currProgress)
 				}
 			})
-			// fetch('http://localhost:3000/post-test', {
-			// 	method: 'POST',
-			// 	headers: {
-			// 		Accept: 'application/json'
-			// 	},
-			// 	body: form
-			// })
-		}
-
-		reader.onloadstart = e => {
-			console.warn('== onloadstart')
-		}
-
-		reader.onprogress = e => {
-			if (e.lengthComputable) {
-				var percentLoaded = Math.round(e.loaded / e.total * 100)
-				console.warn(`total:${e.total}, loaded:${e.loaded}, percent:${percentLoaded}%`)
-			}
 		}
 
 		reader.readAsArrayBuffer(uploadedFile)
 	}
 
-	render() {
-		return (
-			<div>
-				<h4>Resumable Upload Component</h4>
-				<input ref={file => (this._file = file)} type="file" onChange={this.changeHandler} />
+	return (
+		<div className="container">
+			<h4>Resumable Upload Component</h4>
+			<input type="file" onChange={changeHandler} />
 
-				<div>
-					<div />
-					<div>10%</div>
-				</div>
-				{/* <button onClick={this.uploadFile}>上传文件</button> */}
+			<div className="progressBar">
+				<div className="highLight" style={{ width: `${progress}%` }} />
+				<div className="baseBar" />
+				<div className="text">{progress}%</div>
 			</div>
-		)
-	}
+		</div>
+	)
 }
 
 export default ResumableUpload
