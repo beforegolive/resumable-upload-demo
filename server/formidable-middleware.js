@@ -18,19 +18,9 @@ const koaMiddleware = opt => {
 				.toString(16)
 				.substr(2)
 			file.path = `${form.uploadDir}${randomStr}-${file.name}`
-			console.warn('=== event fileBegin :')
-		})
-		form.on('file', (filename, file) => {
-			console.warn('=== event filename :', filename)
-			console.warn('=== event file :', file)
-		})
-
-		form.on('field', (fieldName, fieldValue) => {
-			console.warn('=== event field:')
-			console.warn('=== fieldName:', fieldName)
-			console.warn('=== fieldValue:', fieldValue)
-		})
-
+			console.warn('=== event fileBegin :', filename)
+    })
+    
 		form.onPart = part => {
 			const tempFilePath = `${tempFileDir}${part.filename}`
 			const writer = fs.createWriteStream(tempFilePath, { flags: 'a' })
