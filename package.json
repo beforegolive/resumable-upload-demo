@@ -1,7 +1,8 @@
 {
   "name": "resumable-upload-demo",
   "version": "1.0.0",
-  "description": "",
+  "description": "resumable upload demo，断点续传的demo",
+  "keywords": ["resumable-upload", "断点续传"],
   "main": "index.js",
   "dependencies": {
     "@koa/cors": "^2.2.3",
