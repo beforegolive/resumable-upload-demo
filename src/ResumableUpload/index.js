@@ -56,10 +56,15 @@ function ResumableUpload() {
 		reader.readAsArrayBuffer(uploadedFile)
 	}
 
+	// 确保上传同一个文件时也能触发onChange事件
+	const clearSelectedFile = e => {
+		e.target.value = null
+	}
+
 	return (
 		<div className="container">
 			<h4>Resumable Upload Component</h4>
-			<input type="file" onChange={changeHandler} />
+			<input type="file" onChange={changeHandler} onClick={clearSelectedFile} />
 
 			<div className="progressBar">
 				<div className="highLight" style={{ width: `${progress}%` }} />
