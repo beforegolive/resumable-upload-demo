@@ -18,24 +18,20 @@ const koaMiddleware = opt => {
 				.toString(16)
 				.substr(2)
 			file.path = `${form.uploadDir}${randomStr}-${file.name}`
-			console.warn('=== event fileBegin :', filename)
-    })
-    
+		})
+
 		form.onPart = part => {
 			const tempFilePath = `${tempFileDir}${part.filename}`
 			const writer = fs.createWriteStream(tempFilePath, { flags: 'a' })
 			form.on('aborted', e => {
-				console.warn('*** aborted e:', e)
 				writer.end()
 			})
 
 			form.on('end', () => {
-				console.warn('*** event end :')
 				writer.end()
 			})
 
 			part.on('data', buffer => {
-				console.warn('=== onPart part:', part)
 				writer.write(buffer)
 			})
 		}

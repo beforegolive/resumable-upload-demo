@@ -55,12 +55,10 @@ router.post('/post-test', async ctx => {
 })
 
 router.get('/get-tmp-file-size', async ctx => {
-	console.warn(ctx.query)
 	const { name } = ctx.query
 	const filePath = `./upload/tmp/${name}`
 	try {
 		const instance = fs.statSync(filePath)
-		console.warn(instance)
 		ctx.body = { size: instance.size }
 	} catch (err) {
 		ctx.body = { size: 0 }
