@@ -7,6 +7,8 @@ import './index.css'
 function ResumableUpload() {
 	const [progress, setProgress] = useState(0)
 
+	const CancelToken = axios.CancelToken
+	let cancel
 	useEffect(() => {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 		} else {
@@ -40,17 +42,29 @@ function ResumableUpload() {
 					? reader.result
 					: reader.result.slice(previousUploadedFileSize.size)
 
-			form.append('file', new File([partFile], finalFileName, { type: 'text/plain' }))
+			form.append(
+				uploadedFile.name,
+				new File([partFile], finalFileName, { type: 'text/plain' })
+			)
 
-			axios.post('http://localhost:3000/post-test', form, {
-				onUploadProgress: progressEvent => {
-					// 用当前上传部分加上上次上传的部分来正确显示进度条位置
-					const uploadedPart = progressEvent.loaded + previousUploadedFileSize.size
-					const wholeFileSize = uploadedFile.size
-					const currProgress = Math.floor(uploadedPart / wholeFileSize * 100)
-					setProgress(currProgress)
-				}
-			})
+			axios
+				.post('http://localhost:3000/upload-file-test', form, {
+					onUploadProgress: progressEvent => {
+						// 用当前上传部分加上上次上传的部分来正确显示进度条位置
+						const uploadedPart = progressEvent.loaded + previousUploadedFileSize.size
+						const wholeFileSize = uploadedFile.size
+						const currProgress = Math.floor(uploadedPart / wholeFileSize * 100)
+						setProgress(currProgress)
+					},
+					cancelToken: new CancelToken(function executor(c) {
+						cancel = c
+					})
+				})
+				.catch(err => {
+					if (axios.isCancel(err)) {
+						console.warn('post Request canceled')
+					}
+				})
 		}
 
 		reader.readAsArrayBuffer(uploadedFile)
@@ -61,11 +75,17 @@ function ResumableUpload() {
 		e.target.value = null
 	}
 
+	const stopUploading = () => {
+		// console.warn('======source:', source)
+		cancel()
+		// source.cancel('暂停上传')
+	}
+
 	return (
 		<div className="container">
 			<h4>Resumable Upload Component</h4>
 			<input type="file" onChange={changeHandler} onClick={clearSelectedFile} />
-
+			<input type="button" onClick={stopUploading} value={'stop'} />
 			<div className="progressBar">
 				<div className="highLight" style={{ width: `${progress}%` }} />
 				<div className="baseBar" />

@@ -2,7 +2,7 @@ import formidable from 'formidable'
 import fs from 'fs'
 
 const koaMiddleware = opt => {
-	const tempFileDir = `./upload/tmp/`
+	const tempFileDir = `${opt.uploadDir}/tmp/`
 	if (!fs.existsSync(tempFileDir, { recursive: true })) {
 		fs.mkdirSync(tempFileDir)
 	}
@@ -13,22 +13,17 @@ const koaMiddleware = opt => {
 			form[key] = opt[key]
 		}
 
-		form.on('fileBegin', (filename, file) => {
-			const randomStr = Math.random()
-				.toString(16)
-				.substr(2)
-			file.path = `${form.uploadDir}${randomStr}-${file.name}`
-		})
-
 		form.onPart = part => {
 			const tempFilePath = `${tempFileDir}${part.filename}`
 			const writer = fs.createWriteStream(tempFilePath, { flags: 'a' })
 			form.on('aborted', e => {
 				writer.end()
+				console.warn(`=== ${part.name} 上传被中断，已上传的部分保存为临时文件，等待续传`)
 			})
 
 			form.on('end', () => {
 				writer.end()
+				console.warn(`=== ${part.name} 上传完成`)
 			})
 
 			part.on('data', buffer => {
@@ -37,12 +32,12 @@ const koaMiddleware = opt => {
 		}
 
 		form.on('progress', (bytesReceived, bytesExpected) => {
-			console.warn('%% bytesReceived:', bytesReceived)
-			console.warn('%% bytesExpected:', bytesExpected)
+			console.warn(`%% bytesReceived: ${bytesReceived}, bytesExpected:${bytesExpected}`)
 		})
 
 		await new Promise((resolve, reject) => {
 			form.parse(ctx.req, (err, fields, files) => {
+				console.warn(ctx.req)
 				if (err) {
 					reject(err)
 				} else {
