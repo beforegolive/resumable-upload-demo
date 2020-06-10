@@ -32,3 +32,29 @@
 	width: 100%;
 	text-align: center;
 }
+
+.subtitle {
+	margin: 10px 0 30px;
+	color: #556dc7;
+	font-size: 13px;
+}
+
+.tip {
+	margin: 30px 0;
+	color: gray;
+	font-size: 11px;
+}
+
+.uploading {
+	margin: 5;
+	color: rgb(6, 102, 134);
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.finished {
+	margin: 5;
+	color: green;
+	font-size: 12px;
+	font-weight: bold;
+}

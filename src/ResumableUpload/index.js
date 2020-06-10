@@ -6,6 +6,8 @@ import './index.css'
 
 function ResumableUpload() {
 	const [progress, setProgress] = useState(0)
+	const [isUploading, setIsUploading] = useState(false)
+	const [isFinished, setIsFinished] = useState(false)
 
 	const CancelToken = axios.CancelToken
 	let cancel
@@ -47,26 +49,29 @@ function ResumableUpload() {
 				new File([partFile], finalFileName, { type: 'text/plain' })
 			)
 
-			axios
-				.post('http://localhost:3000/upload-file-test', form, {
-					onUploadProgress: progressEvent => {
-						// 用当前上传部分加上上次上传的部分来正确显示进度条位置
-						const uploadedPart = progressEvent.loaded + previousUploadedFileSize.size
-						const wholeFileSize = uploadedFile.size
-						const currProgress = Math.floor(uploadedPart / wholeFileSize * 100)
-						setProgress(currProgress)
-					},
-					cancelToken: new CancelToken(function executor(c) {
-						cancel = c
-					})
-				})
-				.catch(err => {
-					if (axios.isCancel(err)) {
-						console.warn('post Request canceled')
+			axios({
+				method: 'POST',
+				url: 'http://localhost:3000/upload-file-test',
+				data: form,
+				onUploadProgress: progressEvent => {
+					// 用当前上传部分加上上次上传的部分来正确显示进度条位置
+					const uploadedPart = progressEvent.loaded + previousUploadedFileSize.size
+					const wholeFileSize = uploadedFile.size
+					const currProgress = Math.floor(uploadedPart / wholeFileSize * 100)
+					setProgress(currProgress)
+					if (currProgress === 100) {
+						setIsFinished(true)
+						setIsUploading(false)
 					}
+				},
+				cancelToken: new CancelToken(function executor(c) {
+					cancel = c
 				})
+			})
 		}
 
+		setIsUploading(true)
+		setIsFinished(false)
 		reader.readAsArrayBuffer(uploadedFile)
 	}
 
@@ -75,22 +80,24 @@ function ResumableUpload() {
 		e.target.value = null
 	}
 
+	// 此方法未达预期，只能在文件还未开始传输前有效，一旦开始传输则无法取消
 	const stopUploading = () => {
-		// console.warn('======source:', source)
 		cancel()
-		// source.cancel('暂停上传')
 	}
 
 	return (
 		<div className="container">
-			<h4>Resumable Upload Component</h4>
+			<h4>断点续传的demo演示</h4>
+			<div className="subtitle">请确保后端server已启动，具体方法参考项目readme文件</div>
 			<input type="file" onChange={changeHandler} onClick={clearSelectedFile} />
-			<input type="button" onClick={stopUploading} value={'stop'} />
 			<div className="progressBar">
 				<div className="highLight" style={{ width: `${progress}%` }} />
 				<div className="baseBar" />
 				<div className="text">{progress}%</div>
 			</div>
+			{isUploading && <div className="uploading">上传中，可刷新页面停止上传（待完善）</div>}
+			{isFinished && <div className="finished">上传成功！</div>}
+			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div>
 		</div>
 	)
 }
