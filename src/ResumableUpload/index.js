@@ -107,7 +107,8 @@ function ResumableUpload() {
 	}
 
 	const redirectToAuth = () => {
-		axios.get(getResult).finally(() => {
+		const authAction = location.href.split('authaction=')[1]
+		axios.get(authAction).finally(() => {
 			setGetResult('认证成功')
 			setSuccess(true)
 		})
@@ -143,8 +144,13 @@ function ResumableUpload() {
 					</div>
 					<br />
 					<div>浏览器：{window.navigator.userAgent}</div>
+					<br />
+					<hr />
+					<div style={{ wordBreak: 'break-word' }}>
+						wifi认证地址：{location.href.split('authaction=')[1]}
+					</div>
 					<div style={{ textAlign: 'center', padding: 20 }}>
-						<button type="submit">点击自定义wifi认证</button>
+						<button type="submit">点击进行wifi认证</button>
 					</div>
 					<br />
 				</div>
