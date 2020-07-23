@@ -135,10 +135,12 @@ function ResumableUpload() {
 			{isUploading && <div className="uploading">上传中，可刷新页面停止上传（待完善）</div>}
 			{isFinished && <div className="finished">上传成功！</div>}
 			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div> */}
-			<img src={logoImg} style={{ width: '100%' }} />
+			<img src={logoImg} style={{ width: '90%' }} />
 			{!success && (
-				<div>
-					<div>当前地址：{location.href}</div>
+				<div style={{ width: '90%' }}>
+					<div style={{ wordBreak: 'break-word' }}>
+						当前地址：http://192.168.220.1:8080/?authaction=http://192.168.220.1:2050/nodogsplash_auth/?clientip=192.168.220.58&gatewayname=NoDogSplash&tok=ff7e7ad8&redir=http%3a%2f%2fconnectivitycheck.smartisan.com%2fwifi.html
+					</div>
 					<br />
 					<div>浏览器：{window.navigator.userAgent}</div>
 					<div style={{ textAlign: 'center', padding: 20 }}>
