@@ -105,7 +105,13 @@ function ResumableUpload() {
 	}
 
 	const redirectToAuth = () => {
-		location.href = getResult
+		axios.get(getResult).then(() => {
+			setGetResult('认证成功')
+			setTimeout(() => {
+				window.close()
+			}, 3000)
+		})
+		// location.href = getResult
 	}
 	const getAuthActionUrl = () => {
 		const authAction = location.href.split('authaction=')[1]
@@ -125,6 +131,7 @@ function ResumableUpload() {
 			{isUploading && <div className="uploading">上传中，可刷新页面停止上传（待完善）</div>}
 			{isFinished && <div className="finished">上传成功！</div>}
 			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div>
+			<div>下面部分是跟另外一个demo相关：captive portal，请忽略。</div>
 			<div>当前地址：{location.href}</div>
 			<div>location.search: {location.search}</div>
 			<div>浏览器：{window.navigator.userAgent}</div>
@@ -141,9 +148,12 @@ function ResumableUpload() {
 					<button type="submit">form 提交 get 方法</button>
 				</form>
 			</div>
+
+			<br />
 			<div>
 				<button onClick={getAuthActionUrl}>获取认证地址</button>
 			</div>
+			<br />
 			<div>
 				<button onClick={redirectToAuth}>链接认证</button>
 			</div>
