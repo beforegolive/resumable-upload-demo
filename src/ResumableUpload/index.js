@@ -110,15 +110,17 @@ function ResumableUpload() {
 		const authAction = location.href.split('authaction=')[1]
 		axios
 			.get(authAction)
+			.then(() => {
+				setSuccess(true)
+			})
 			.catch(err => {
+				setSuccess(true)
 				setGetResult(JSON.stringify(err))
 			})
-			.finally(() => {
-				setSuccess(true)
-				setTimeout(() => {
-					location.href = authAction
-				}, 3000)
-			})
+
+		setTimeout(() => {
+			location.href = authAction
+		}, 3000)
 	}
 
 	return (
@@ -153,10 +155,10 @@ function ResumableUpload() {
 							认证成功
 						</div>
 					)}
-					<div>
+					{/* <div>
 						<div>result: </div>
 						<div>{getResult}</div>
-					</div>
+					</div> */}
 				</div>
 				<br />
 			</div>
