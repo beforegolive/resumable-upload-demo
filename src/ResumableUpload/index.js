@@ -105,7 +105,7 @@ function ResumableUpload() {
 	}
 
 	const redirectToAuth = () => {
-		axios.get('https://cn.bing.com').finally(() => {
+		axios.get(getResult).finally(() => {
 			setGetResult('认证成功')
 		})
 
