@@ -105,9 +105,9 @@ function ResumableUpload() {
 	}
 
 	const redirectToAuth = () => {
-		let params = new URLSearchParams(location.search)
-		const authUrl = params.get('authaction')
-		setGetResult(authUrl)
+		const authAction = location.href.split('authaction=')[1]
+		setGetResult(authAction)
+		location.href = authAction
 	}
 
 	return (
