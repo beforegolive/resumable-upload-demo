@@ -2,7 +2,10 @@
   "name": "resumable-upload-demo",
   "version": "1.0.0",
   "description": "resumable upload demo，断点续传的demo",
-  "keywords": ["resumable-upload", "断点续传"],
+  "keywords": [
+    "resumable-upload",
+    "断点续传"
+  ],
   "main": "index.js",
   "dependencies": {
     "@koa/cors": "^2.2.3",
@@ -35,7 +38,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --open --host 0.0.0.0",
     "server": "nodemon --exec 'node -r esm ./server/index.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack"

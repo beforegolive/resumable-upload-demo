@@ -37,7 +37,6 @@ const koaMiddleware = opt => {
 
 		await new Promise((resolve, reject) => {
 			form.parse(ctx.req, (err, fields, files) => {
-				console.warn(ctx.req)
 				if (err) {
 					reject(err)
 				} else {

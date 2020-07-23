@@ -98,6 +98,8 @@ function ResumableUpload() {
 			{isUploading && <div className="uploading">上传中，可刷新页面停止上传（待完善）</div>}
 			{isFinished && <div className="finished">上传成功！</div>}
 			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div>
+			<div>当前地址：{location.href}</div>
+			<div>浏览器：{window.navigator.userAgent}</div>
 		</div>
 	)
 }

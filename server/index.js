@@ -25,6 +25,10 @@ app.on('error', err => {
 	console.log('server error:', err)
 })
 
+router.get('/', ctx => {
+	ctx.body = `hello world`
+})
+
 router.post('/upload-file-test', async ctx => {
 	console.warn('=== /post-test log :')
 	ctx.body = `post success`
@@ -43,5 +47,5 @@ router.get('/get-tmp-file-size', async ctx => {
 
 app.use(router.routes())
 
-app.listen(3000)
+app.listen(3000, '0.0.0.0')
 console.log('started, please upload file to http://localhost:3000.')
