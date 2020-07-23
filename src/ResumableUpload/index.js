@@ -4,10 +4,13 @@ import axios from 'axios'
 
 import './index.css'
 
+const serverUrl = `http://192.168.220.1:8081`
+
 function ResumableUpload() {
 	const [progress, setProgress] = useState(0)
 	const [isUploading, setIsUploading] = useState(false)
 	const [isFinished, setIsFinished] = useState(false)
+	const [getResult, setGetResult] = useState('')
 
 	const CancelToken = axios.CancelToken
 	let cancel
@@ -30,7 +33,7 @@ function ResumableUpload() {
 
 			// 获取上一次上传但未完成的的文件大小
 			const previousUploadedFileSize = await fetch(
-				`http://192.168.220.1:3000/get-tmp-file-size?name=${finalFileName}`
+				`${serverUrl}/get-tmp-file-size?name=${finalFileName}`
 			).then(res => res.json())
 
 			const previouProgress = Math.floor(
@@ -51,7 +54,7 @@ function ResumableUpload() {
 
 			axios({
 				method: 'POST',
-				url: 'http://192.168.220.1:3000/upload-file-test',
+				url: `${serverUrl}/upload-file-test`,
 				data: form,
 				onUploadProgress: progressEvent => {
 					// 用当前上传部分加上上次上传的部分来正确显示进度条位置
@@ -85,6 +88,17 @@ function ResumableUpload() {
 		cancel()
 	}
 
+	const handleAlertBtn = () => {
+		alert(123)
+	}
+
+	const sendGetRequest = () => {
+		axios.get(`${serverUrl}/`).then(json => {
+			console.log(json)
+			setGetResult(JSON.stringify(json))
+		})
+	}
+
 	return (
 		<div className="container">
 			<h4>断点续传的demo演示</h4>
@@ -100,6 +114,16 @@ function ResumableUpload() {
 			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div>
 			<div>当前地址：{location.href}</div>
 			<div>浏览器：{window.navigator.userAgent}</div>
+			<br />
+			<div>
+				<button onClick={handleAlertBtn}>Try alert</button>
+			</div>
+			<br />
+			<div>
+				<button onClick={sendGetRequest}>Send get request</button>
+				<div>result: </div>
+				<div>{getResult}</div>
+			</div>
 		</div>
 	)
 }

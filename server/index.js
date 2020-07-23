@@ -47,5 +47,7 @@ router.get('/get-tmp-file-size', async ctx => {
 
 app.use(router.routes())
 
-app.listen(3000, '0.0.0.0')
-console.log('started, please upload file to http://localhost:3000.')
+const host = '0.0.0.0'
+const port = 8081
+app.listen(port, host)
+console.log(`started, please upload file to http://${host}:${port}.`)
