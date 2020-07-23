@@ -93,10 +93,21 @@ function ResumableUpload() {
 	}
 
 	const sendGetRequest = () => {
-		axios.get(`${serverUrl}/`).then(json => {
-			console.log(json)
-			setGetResult(JSON.stringify(json))
-		})
+		axios
+			.get(`${serverUrl}/`)
+			.then(json => {
+				console.log(json)
+				setGetResult(JSON.stringify(json))
+			})
+			.catch(err => {
+				setGetResult(JSON.stringify(err))
+			})
+	}
+
+	const redirectToAuth = () => {
+		let params = new URLSearchParams(location.search)
+		const authUrl = params.get('authaction')
+		setGetResult(authUrl)
 	}
 
 	return (
@@ -113,6 +124,7 @@ function ResumableUpload() {
 			{isFinished && <div className="finished">上传成功！</div>}
 			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div>
 			<div>当前地址：{location.href}</div>
+			<div>location.search: {location.search}</div>
 			<div>浏览器：{window.navigator.userAgent}</div>
 			<br />
 			<div>
@@ -121,6 +133,16 @@ function ResumableUpload() {
 			<br />
 			<div>
 				<button onClick={sendGetRequest}>Send get request</button>
+			</div>
+			<div>
+				<form method="get" action={`${serverUrl}/`}>
+					<button type="submit">form 提交 get 方法</button>
+				</form>
+			</div>
+			<div>
+				<button onClick={redirectToAuth}>认证</button>
+			</div>
+			<div>
 				<div>result: </div>
 				<div>{getResult}</div>
 			</div>
