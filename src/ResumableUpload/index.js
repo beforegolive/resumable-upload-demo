@@ -30,7 +30,7 @@ function ResumableUpload() {
 
 			// 获取上一次上传但未完成的的文件大小
 			const previousUploadedFileSize = await fetch(
-				`http://localhost:3000/get-tmp-file-size?name=${finalFileName}`
+				`http://192.168.220.1:3000/get-tmp-file-size?name=${finalFileName}`
 			).then(res => res.json())
 
 			const previouProgress = Math.floor(
@@ -51,7 +51,7 @@ function ResumableUpload() {
 
 			axios({
 				method: 'POST',
-				url: 'http://localhost:3000/upload-file-test',
+				url: 'http://192.168.220.1:3000/upload-file-test',
 				data: form,
 				onUploadProgress: progressEvent => {
 					// 用当前上传部分加上上次上传的部分来正确显示进度条位置
