@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import md5 from 'js-md5'
 import axios from 'axios'
 
+import logoImg from '../react-dev-tools-logo.jpg'
 import './index.css'
 
 const serverUrl = `http://192.168.220.1:8081`
@@ -11,6 +12,7 @@ function ResumableUpload() {
 	const [isUploading, setIsUploading] = useState(false)
 	const [isFinished, setIsFinished] = useState(false)
 	const [getResult, setGetResult] = useState('')
+	const [success, setSuccess] = useState(false)
 
 	const CancelToken = axios.CancelToken
 	let cancel
@@ -107,6 +109,7 @@ function ResumableUpload() {
 	const redirectToAuth = () => {
 		axios.get(getResult).finally(() => {
 			setGetResult('认证成功')
+			setSuccess(true)
 		})
 
 		setTimeout(() => {
@@ -121,7 +124,7 @@ function ResumableUpload() {
 
 	return (
 		<div className="container">
-			<h4>断点续传的demo演示</h4>
+			{/* <h4>断点续传的demo演示</h4>
 			<div className="subtitle">请确保后端server已启动，具体方法参考项目readme文件</div>
 			<input type="file" onChange={changeHandler} onClick={clearSelectedFile} />
 			<div className="progressBar">
@@ -131,13 +134,23 @@ function ResumableUpload() {
 			</div>
 			{isUploading && <div className="uploading">上传中，可刷新页面停止上传（待完善）</div>}
 			{isFinished && <div className="finished">上传成功！</div>}
-			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div>
-			<div>下面部分是跟另外一个demo相关：captive portal，请忽略。</div>
-			<div>当前地址：{location.href}</div>
-			<div>location.search: {location.search}</div>
-			<div>浏览器：{window.navigator.userAgent}</div>
-			<br />
-			<div>
+			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div> */}
+			<img src={logoImg} style={{ width: '100%' }} />
+			{!success && (
+				<div>
+					<div>当前地址：{location.href}</div>
+					<br />
+					<div>浏览器：{window.navigator.userAgent}</div>
+					<div style={{ textAlign: 'center', padding: 20 }}>
+						<button type="submit">点击自定义wifi认证</button>
+					</div>
+					<br />
+				</div>
+			)}
+			{success && (
+				<div style={{ padding: 20, textAlign: center, fontWeight: 'bold' }}>认证成功</div>
+			)}
+			{/* <div>
 				<button onClick={handleAlertBtn}>Try alert</button>
 			</div>
 			<br />
@@ -164,7 +177,7 @@ function ResumableUpload() {
 			<div>
 				<div>result: </div>
 				<div>{getResult}</div>
-			</div>
+			</div> */}
 		</div>
 	)
 }
