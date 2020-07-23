@@ -137,27 +137,27 @@ function ResumableUpload() {
 			{isFinished && <div className="finished">上传成功！</div>}
 			<div className="tip">请使用chrome浏览器的网络限速功能来更好的测试断点续传</div> */}
 			<img src={logoImg} style={{ width: '90%' }} />
-			{!success && (
-				<div style={{ width: '90%' }}>
-					<div style={{ wordBreak: 'break-word' }}>
-						当前地址：http://192.168.220.1:8080/?authaction=http://192.168.220.1:2050/nodogsplash_auth/?clientip=192.168.220.58&gatewayname=NoDogSplash&tok=ff7e7ad8&redir=http%3a%2f%2fconnectivitycheck.smartisan.com%2fwifi.html
-					</div>
-					<br />
-					<div>浏览器：{window.navigator.userAgent}</div>
-					<br />
-					<hr />
-					<div style={{ wordBreak: 'break-word' }}>
-						wifi认证地址：{location.href.split('authaction=')[1]}
-					</div>
-					<div style={{ textAlign: 'center', padding: 20 }}>
-						<button type="submit">点击进行wifi认证</button>
-					</div>
-					<br />
+
+			<div style={{ width: '90%' }}>
+				<div style={{ wordBreak: 'break-word' }}>当前地址：{location.href}</div>
+				<br />
+				<div>浏览器：{window.navigator.userAgent}</div>
+				<br />
+				<hr />
+				<div style={{ textAlign: 'center', padding: 20 }}>
+					{!success && (
+						<button type="button" onClick={redirectToAuth}>
+							点击进行wifi认证
+						</button>
+					)}
+					{success && (
+						<div style={{ padding: 20, textAlign: 'center', fontWeight: 'bold' }}>
+							认证成功
+						</div>
+					)}
 				</div>
-			)}
-			{success && (
-				<div style={{ padding: 20, textAlign: center, fontWeight: 'bold' }}>认证成功</div>
-			)}
+				<br />
+			</div>
 			{/* <div>
 				<button onClick={handleAlertBtn}>Try alert</button>
 			</div>
