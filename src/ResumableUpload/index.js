@@ -105,9 +105,11 @@ function ResumableUpload() {
 	}
 
 	const redirectToAuth = () => {
+		location.href = getResult
+	}
+	const getAuthActionUrl = () => {
 		const authAction = location.href.split('authaction=')[1]
 		setGetResult(authAction)
-		location.href = authAction
 	}
 
 	return (
@@ -140,8 +142,14 @@ function ResumableUpload() {
 				</form>
 			</div>
 			<div>
-				<button onClick={redirectToAuth}>认证</button>
+				<button onClick={getAuthActionUrl}>获取认证地址</button>
 			</div>
+			<div>
+				<button onClick={redirectToAuth}>链接认证</button>
+			</div>
+			<form method="get" action={getResult}>
+				<button type="submit">表单认证</button>
+			</form>
 			<div>
 				<div>result: </div>
 				<div>{getResult}</div>
