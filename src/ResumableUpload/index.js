@@ -105,14 +105,15 @@ function ResumableUpload() {
 	}
 
 	const redirectToAuth = () => {
-		axios.get(getResult).then(() => {
+		axios.get('https://cn.bing.com').finally(() => {
 			setGetResult('认证成功')
-			setTimeout(() => {
-				window.close()
-			}, 3000)
 		})
-		// location.href = getResult
+
+		setTimeout(() => {
+			window.close()
+		}, 3000)
 	}
+
 	const getAuthActionUrl = () => {
 		const authAction = location.href.split('authaction=')[1]
 		setGetResult(authAction)
